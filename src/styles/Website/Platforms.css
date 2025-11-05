@@ -1,0 +1,70 @@
+.platforms {
+  padding: 5rem 2rem;
+  background-color: white;
+}
+
+.platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.platform-card {
+  background: #F8FAFC;
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  text-align: center;
+  border: 2px solid #E6EEF5;
+  transition: all 0.3s ease;
+}
+
+.platform-card:hover {
+  border-color: #F5B301;
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(245, 179, 1, 0.15);
+}
+
+.platform-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.platform-card h3 {
+  font-size: 1.5rem;
+  color: #0A1B2E;
+  margin-bottom: 1rem;
+}
+
+.platform-card p {
+  color: #5A6C7D;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.btn-download {
+  background-color: #F5B301;
+  color: #0A1B2E;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(245, 179, 1, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .platforms {
+    padding: 3rem 1.5rem;
+  }
+
+  .platforms-grid {
+    grid-template-columns: 1fr;
+  }
+}
