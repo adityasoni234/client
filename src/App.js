@@ -1,7 +1,10 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-// Pages
+// Website Pages
+import Home from './pages/Website/Home';
+
+// Admin Pages
 import Login from './pages/Admin/Login';
 import Dashboard from './pages/Admin/Dashboard';
 import Profile from './pages/Admin/Profile';
@@ -20,11 +23,11 @@ import Sidebar from './pages/Admin/Sidebar';
 function App() {
   return (
     <Routes>
-      {/* Login Route */}
-      <Route path="/admin/login" element={<Login />} />
+      {/* Website Home Page - Default Route */}
+      <Route path="/" element={<Home />} />
       
-      {/* Redirect root to login */}
-      <Route path="/" element={<Navigate to="/admin/login" replace />} />
+      {/* Admin Login Route */}
+      <Route path="/admin/login" element={<Login />} />
 
       {/* Admin Routes with Sidebar Layout */}
       <Route path="/admin/*" element={
@@ -53,12 +56,15 @@ function App() {
               <Route path="referral-links" element={<ReferralLinks />} />
               <Route path="attracted-clients" element={<AttractedClients />} />
               
-              {/* Default redirect */}
+              {/* Default redirect to dashboard */}
               <Route path="" element={<Navigate to="dashboard" replace />} />
             </Routes>
           </div>
         </div>
       } />
+
+      {/* Catch all - redirect to home */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

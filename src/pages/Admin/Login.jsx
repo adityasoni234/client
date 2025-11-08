@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FiArrowLeft } from 'react-icons/fi';
 import '../../styles/Admin/Login.css';
 
 function Login() {
@@ -99,6 +100,11 @@ function Login() {
     alert('Password reset link will be sent to your email');
   };
 
+  const handleBackToHome = () => {
+    // Change this URL to your actual frontend home page
+    window.location.href = '/';
+  };
+
   // Quick fill for testing - you can remove this in production
   const quickFill = (role) => {
     const user = dummyUsers.find(u => u.role === role);
@@ -114,6 +120,11 @@ function Login() {
 
   return (
     <div className="login-page">
+      {/* Back to Home Button */}
+      <button className="back-to-home" onClick={handleBackToHome}>
+        <FiArrowLeft /> Back to Home
+      </button>
+
       <div className="login-container">
         <div className="login-left">
           <div className="login-branding">
