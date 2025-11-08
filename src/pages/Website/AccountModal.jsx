@@ -38,6 +38,13 @@ function AccountModal({ isOpen, onClose }) {
     onClose();
   };
 
+  const handleLoginClick = (e) => {
+    e.preventDefault();
+    onClose(); // Close the modal first
+    // Redirect to login page
+    window.location.href = '/admin/login';
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -163,7 +170,10 @@ function AccountModal({ isOpen, onClose }) {
           <div className="modal-divider">OR</div>
 
           <p className="login-link">
-            Already have an account? <a href="#login">Log in</a>
+            Already have an account?{' '}
+            <a href="/admin/login" onClick={handleLoginClick}>
+              Log in
+            </a>
           </p>
         </form>
       </div>
