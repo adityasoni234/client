@@ -87,7 +87,7 @@ function Sidebar() {
   return (
     <div className="admin-sidebar">
       <div className="sidebar-logo">
-        <img src="/logo.png" alt="Xmindia" />
+        <img src="/logo.jpeg" alt="StockVala" />
       </div>
 
       <nav className="sidebar-nav">
