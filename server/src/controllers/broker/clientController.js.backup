@@ -1,0 +1,165 @@
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
+// Get dashboard stats
+const getStats = async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Get total clients
+    const totalClients = await prisma.user.count({
+      where: {
+        role: 'CLIENT'
+      }
+    });
+
+    // Get total masters/IBs
+    const totalMasters = await prisma.user.count({
+      where: {
+        OR: [
+          { role: 'MASTER' },
+          { role: 'SUPER_MASTER' }
+        ]
+      }
+    });
+
+    // Get today's deposits
+    const todayDepositsData = await prisma.depositRequest.aggregate({
+      _sum: {
+        amount: true
+      },
+      where: {
+        status: 'APPROVED',
+        createdAt: {
+          gte: today
+        }
+      }
+    });
+
+    // Get today's withdrawals
+    const todayWithdrawalsData = await prisma.withdrawalRequest.aggregate({
+      _sum: {
+        amount: true
+      },
+      where: {
+        status: 'APPROVED',
+        createdAt: {
+          gte: today
+        }
+      }
+    });
+
+    // Get pending KYC count
+    const pendingKYC = await prisma.kycProfile.count({
+      where: {
+        status: 'PENDING'
+      }
+    });
+
+    // Get active accounts
+    const activeAccounts = await prisma.user.count({
+      where: {
+        status: 'ACTIVE',
+        role: 'CLIENT'
+      }
+    });
+
+    res.json({
+      success: true,
+      data: {
+        totalClients,
+        totalMasters,
+        todayDeposits: todayDepositsData._sum.amount ? parseFloat(todayDepositsData._sum.amount) : 0,
+        todayWithdrawals: todayWithdrawalsData._sum.amount ? parseFloat(todayWithdrawalsData._sum.amount) : 0,
+        pendingKYC,
+        activeAccounts
+      }
+    });
+  } catch (error) {
+    console.error('Get stats error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+// Get recent activity
+const getActivity = async (req, res) => {
+  try {
+    // Get recent deposits
+    const deposits = await prisma.depositRequest.findMany({
+      take: 10,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    // Get recent withdrawals
+    const withdrawals = await prisma.withdrawalRequest.findMany({
+      take: 10,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    // Format data
+    const formattedDeposits = deposits.map(d => ({
+      id: d.id,
+      userId: d.userId,
+      userName: d.user.name,
+      amount: parseFloat(d.amount),
+      status: d.status,
+      createdAt: d.createdAt
+    }));
+
+    const formattedWithdrawals = withdrawals.map(w => ({
+      id: w.id,
+      userId: w.userId,
+      userName: w.user.name,
+      amount: parseFloat(w.amount),
+      status: w.status,
+      createdAt: w.createdAt
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        deposits: formattedDeposits,
+        withdrawals: formattedWithdrawals
+      }
+    });
+  } catch (error) {
+    console.error('Get activity error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+module.exports = {
+  getAllClients,
+  getClientById,
+  blockClient,
+  unblockClient
+};

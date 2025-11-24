@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USERS
+// ============================================
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  SUPER_MASTER
+  MASTER
+  CLIENT
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BLOCKED
+  PENDING
+}
+
+model User {
+  id                String      @id @default(cuid())
+  email             String      @unique
+  phone             String?     @unique
+  password          String
+  name              String
+  role              UserRole
+  parentId          String?     @map("parent_id")
+  parent            User?       @relation("UserHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children          User[]      @relation("UserHierarchy")
+  status            UserStatus  @default(PENDING)
+  twoFactorEnabled  Boolean     @default(false) @map("two_factor_enabled")
+  lastLoginAt       DateTime?   @map("last_login_at")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+  
+  kycProfile        KYCProfile?
+  tradingAccounts   TradingAccount[]
+  wallets           Wallet[]
+  depositRequests   DepositRequest[]
+  withdrawalRequests WithdrawalRequest[]
+
+  @@map("users")
+  @@index([email])
+  @@index([role])
+  @@index([parentId])
+}
+
+// ============================================
+// KYC
+// ============================================
+
+enum KYCStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model KYCProfile {
+  id              String     @id @default(cuid())
+  userId          String     @unique @map("user_id")
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  panNumber       String?    @map("pan_number")
+  panDocUrl       String?    @map("pan_doc_url") @db.Text
+  aadhaarNumber   String?    @map("aadhaar_number")
+  aadhaarDocUrl   String?    @map("aadhaar_doc_url") @db.Text
+  selfieUrl       String?    @map("selfie_url") @db.Text
+  addressProofUrl String?    @map("address_proof_url") @db.Text
+  status          KYCStatus  @default(PENDING)
+  remarks         String?    @db.Text
+  verifiedBy      String?    @map("verified_by")
+  verifiedAt      DateTime?  @map("verified_at")
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+
+  @@map("kyc_profiles")
+}
+
+// ============================================
+// TRADING ACCOUNTS
+// ============================================
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  CLOSED
+}
+
+model TradingAccount {
+  id          String        @id @default(cuid())
+  userId      String        @map("user_id")
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mt5Login    String        @unique @map("mt5_login")
+  mt5Server   String        @default("Demo") @map("mt5_server")
+  groupName   String        @default("Standard") @map("group_name")
+  leverage    Int           @default(100)
+  balance     Decimal       @default(0) @db.Decimal(15, 2)
+  equity      Decimal       @default(0) @db.Decimal(15, 2)
+  status      AccountStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  @@map("trading_accounts")
+  @@index([userId])
+}
+
+// ============================================
+// WALLETS
+// ============================================
+
+enum Currency {
+  INR
+  USD
+  USDT
+}
+
+model Wallet {
+  id               String          @id @default(cuid())
+  userId           String          @map("user_id")
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currency         Currency
+  availableBalance Decimal         @default(0) @map("available_balance") @db.Decimal(15, 2)
+  lockedBalance    Decimal         @default(0) @map("locked_balance") @db.Decimal(15, 2)
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  
+  ledger           WalletLedger[]
+
+  @@unique([userId, currency])
+  @@map("wallets")
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  CREDIT_IN
+  CREDIT_OUT
+  REBATE
+}
+
+model WalletLedger {
+  id            String            @id @default(cuid())
+  walletId      String            @map("wallet_id")
+  wallet        Wallet            @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  type          TransactionType
+  amount        Decimal           @db.Decimal(15, 2)
+  currency      Currency
+  balanceBefore Decimal           @db.Decimal(15, 2) @map("balance_before")
+  balanceAfter  Decimal           @db.Decimal(15, 2) @map("balance_after")
+  description   String?           @db.Text
+  createdAt     DateTime          @default(now()) @map("created_at")
+
+  @@map("wallet_ledger")
+  @@index([walletId])
+}
+
+// ============================================
+// DEPOSITS & WITHDRAWALS
+// ============================================
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+model DepositRequest {
+  id             String        @id @default(cuid())
+  userId         String        @map("user_id")
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount         Decimal       @db.Decimal(15, 2)
+  currency       Currency
+  paymentProofUrl String?      @map("payment_proof_url") @db.Text
+  utrNumber      String?       @map("utr_number")
+  status         RequestStatus @default(PENDING)
+  approvedBy     String?       @map("approved_by")
+  approvedAt     DateTime?     @map("approved_at")
+  createdAt      DateTime      @default(now()) @map("created_at")
+
+  @@map("deposit_requests")
+  @@index([userId])
+  @@index([status])
+}
+
+model WithdrawalRequest {
+  id              String        @id @default(cuid())
+  userId          String        @map("user_id")
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount          Decimal       @db.Decimal(15, 2)
+  currency        Currency
+  accountNumber   String?       @map("account_number")
+  ifscCode        String?       @map("ifsc_code")
+  status          RequestStatus @default(PENDING)
+  approvedBy      String?       @map("approved_by")
+  approvedAt      DateTime?     @map("approved_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  @@map("withdrawal_requests")
+  @@index([userId])
+  @@index([status])
+}
