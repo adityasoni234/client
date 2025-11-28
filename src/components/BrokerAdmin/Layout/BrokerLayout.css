@@ -33,19 +33,39 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 70px;
+  min-height: 80px;
 }
 
-.sidebar-logo h1 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0;
+/* Logo Container */
+.sidebar-logo-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.sidebar-logo p {
-  font-size: 0.75rem;
-  color: #bfdbfe;
-  margin: 0;
+/* Logo Image - Open Sidebar */
+.sidebar-logo-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: contain;
+  background: white;
+  padding: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+/* Logo Image - Closed Sidebar */
+.sidebar-logo-img-mini {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: white;
+  padding: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 .sidebar-toggle-btn {
@@ -56,6 +76,7 @@
   padding: 0.5rem;
   border-radius: 0.5rem;
   transition: background-color 0.2s;
+  flex-shrink: 0;
 }
 
 .sidebar-toggle-btn:hover {
@@ -109,8 +130,8 @@
   display: none;
 }
 
-.broker-sidebar.closed .sidebar-logo {
-  display: none;
+.broker-sidebar.closed .sidebar-menu-item svg {
+  margin-right: 0;
 }
 
 /* Sidebar Footer */
@@ -123,6 +144,7 @@
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 0.75rem 1rem;
   background: none;
   border: none;
@@ -139,6 +161,14 @@
 
 .logout-btn svg {
   margin-right: 0.75rem;
+}
+
+.broker-sidebar.closed .logout-btn svg {
+  margin-right: 0;
+}
+
+.broker-sidebar.closed .logout-btn span {
+  display: none;
 }
 
 /* Main Content Area */
@@ -242,4 +272,30 @@
 
 .broker-page-content::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .broker-sidebar.open {
+    position: fixed;
+    z-index: 1000;
+    height: 100vh;
+  }
+
+  .broker-sidebar.closed {
+    width: 0;
+    overflow: hidden;
+  }
+
+  .sidebar-header {
+    min-height: 70px;
+  }
+
+  .header-title h2 {
+    font-size: 1.25rem;
+  }
+
+  .broker-page-content {
+    padding: 1rem;
+  }
 }

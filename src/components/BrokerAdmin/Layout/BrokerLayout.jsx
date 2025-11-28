@@ -54,12 +54,9 @@ export default function BrokerLayout() {
       <aside className={`broker-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         {/* Logo */}
         <div className="sidebar-header">
-          {sidebarOpen && (
-            <div className="sidebar-logo">
-              <h1>StockVala</h1>
-              <p>Broker Admin</p>
-            </div>
-          )}
+          <div className="sidebar-logo-container">
+            <img src="/logo.jpeg" alt="Logo" className={sidebarOpen ? "sidebar-logo-img" : "sidebar-logo-img-mini"} />
+          </div>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="sidebar-toggle-btn"

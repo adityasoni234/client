@@ -1,6 +1,6 @@
 .broker-dashboard {
   padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #ffffff;
   min-height: 100vh;
 }
 
@@ -15,15 +15,31 @@
 .dashboard-header h1 {
   font-size: 2.5rem;
   font-weight: 800;
-  color: white;
+  color: #1a202c;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-header p {
-  color: rgba(255, 255, 255, 0.9);
+  color: #718096;
   margin: 0.5rem 0 0 0;
   font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #718096;
 }
 
 .refresh-btn {
@@ -31,10 +47,9 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 1.75rem;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #ffffff;
+  color: #2d3748;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
   cursor: pointer;
   font-size: 0.9375rem;
@@ -43,21 +58,24 @@
 }
 
 .refresh-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #f7fafc;
+  border-color: #cbd5e0;
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.refresh-btn:active {
+  transform: translateY(0);
 }
 
 /* Welcome Banner */
 .welcome-banner {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 2.5rem;
   border-radius: 20px;
   margin-bottom: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.25);
 }
 
 .welcome-banner h2 {
@@ -82,9 +100,10 @@
 
 .stat-card {
   background: white;
+  border: 1px solid #e2e8f0;
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -110,8 +129,9 @@
 .stat-card.teal::before { background: linear-gradient(90deg, #14b8a6, #0d9488); }
 
 .stat-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: #cbd5e0;
 }
 
 .stat-header {
@@ -173,9 +193,10 @@
 
 .activity-card {
   background: white;
+  border: 1px solid #e2e8f0;
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .activity-header {
@@ -302,14 +323,21 @@
   justify-content: center;
   min-height: 60vh;
   gap: 1.5rem;
-  color: white;
+  color: #2d3748;
+}
+
+.error-container h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1a202c;
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border: 4px solid #e2e8f0;
+  border-top-color: #667eea;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -323,18 +351,24 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 1.75rem;
-  background: white;
-  color: #667eea;
+  background: #667eea;
+  color: white;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s;
+  font-size: 1rem;
 }
 
 .retry-btn:hover {
+  background: #5a67d8;
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+.retry-btn:active {
+  transform: translateY(0);
 }
 
 /* Responsive */
@@ -367,5 +401,64 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2rem;
+  }
+
+  .welcome-banner {
+    padding: 1.5rem;
+  }
+
+  .welcome-banner h2 {
+    font-size: 1.5rem;
+  }
+
+  .stat-card {
+    min-height: 180px;
+    padding: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: 2.25rem;
+  }
+
+  .activity-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .broker-dashboard {
+    padding: 0.75rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .stat-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .activity-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .activity-amount {
+    align-self: flex-end;
   }
 }

@@ -1,0 +1,5 @@
+cat > requirements_metaapi.txt << EOF
+metaapi-cloud-sdk
+asyncio
+python-dotenv
+EOF

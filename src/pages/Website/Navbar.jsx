@@ -19,8 +19,13 @@ function Navbar({ onOpenModal }) {
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
-        <div className="navbar-logo">Xmindia</div>
+        {/* Logo and Brand */}
+        <div className="navbar-brand">
+          <img src="/logo.jpeg" alt="Xmindia Logo" className="navbar-logo-img" />
+          <span className="navbar-logo-text">Xmindia</span>
+        </div>
         
+        {/* Navigation Menu */}
         <ul className={`navbar-menu ${isMobileMenuOpen ? 'active' : ''}`}>
           <li><a onClick={() => scrollToSection('home')}>Home</a></li>
           <li><a onClick={() => scrollToSection('platforms')}>Platforms</a></li>
@@ -31,10 +36,12 @@ function Navbar({ onOpenModal }) {
           <li><a onClick={() => scrollToSection('contact')}>Contact</a></li>
         </ul>
         
+        {/* CTA Button */}
         <button className="navbar-cta" onClick={onOpenModal}>
           Open Account
         </button>
         
+        {/* Mobile Menu Toggle */}
         <button 
           className="navbar-toggle" 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
